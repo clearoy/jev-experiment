@@ -27,15 +27,6 @@ with JevClient() as client:
 
 Async equivalent: `from jev import AsyncJevClient`, same methods, `await`-ed.
 
-### Methods
-
-| Method | Input | Output |
-|---|---|---|
-| `noul(state, instructions, criteria=None)` | `state`: str/dict/list to evaluate · `instructions`: yes/no question (str) · `criteria`: optional `{"true": desc, "false": desc}` | `float` — probability the answer is yes (0–1) |
-| `choice(state, instructions, criteria)` | `state` · `instructions`: question (str) · `criteria`: `{option_name: description_or_None}`, up to 255 options | `ChoiceAnswer` — `.choice` (picked option), `.probabilities` (dict per option, sums to 1), `.confidence` (0–1) |
-| `score(state, instructions, criteria)` | `state` · `instructions`: question (str) · `criteria`: ordered list of 2–10 level descriptions, low→high | `ScoreAnswer` — `.score` (float, weighted position on the scale), `.probabilities` (dict per level index), `.confidence` (0–1), `.legend` (level index → description) |
-| `ask(state, questions)` | `state` · `questions`: `{name: Choice(...) \| Score(...) \| Noul(...)}`, any mix, evaluated in parallel | `SystemOneResponse` — `.answers` (dict of `name` → `ChoiceAnswer`/`ScoreAnswer`/`NoulAnswer`), `.model`, `.usage` (token counts) |
-| `list_models()` | *(no arguments)* | `ListModelsResponse` — list of available models, each with name, description, release date |
 
 ## Test run
 
