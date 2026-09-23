@@ -1,0 +1,265 @@
+<title>Jev on VCBench</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Inter:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --bg: #f5f1e8;
+    --paper: #ffffff;
+    --ink: #1f1e1b;
+    --ink-2: #55524a;
+    --ink-3: #8c887c;
+    --rule: #e6e1d3;
+    --rule-2: #eeeadb;
+    --accent: #1f7a4d;
+    --accent-soft: #e1ecdf;
+    --bar: #5fae85;
+    --bar-track: #eeeadb;
+    --baseline: #9c998f;
+    --serif: "Fraunces", Georgia, "Times New Roman", serif;
+    --sans: "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #17160f;
+      --paper: #211f18;
+      --ink: #eeeadd;
+      --ink-2: #bdb8a8;
+      --ink-3: #8c887c;
+      --rule: #34312a;
+      --rule-2: #2b2922;
+      --accent: #7cc59e;
+      --accent-soft: #22362a;
+      --bar: #5fae85;
+      --bar-track: #34312a;
+      --baseline: #7a776d;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #17160f;
+    --paper: #211f18;
+    --ink: #eeeadd;
+    --ink-2: #bdb8a8;
+    --ink-3: #8c887c;
+    --rule: #34312a;
+    --rule-2: #2b2922;
+    --accent: #7cc59e;
+    --accent-soft: #22362a;
+    --bar: #5fae85;
+    --bar-track: #34312a;
+    --baseline: #7a776d;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 48px 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .eyebrow, .label {
+    font-size: 11px;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(32px, 6vw, 46px);
+    line-height: 1.08;
+    letter-spacing: -.01em;
+    margin: 6px 0 12px;
+    text-wrap: balance;
+  }
+  .lede { color: var(--ink-2); max-width: 60ch; margin: 0; font-size: 15px; }
+  sub { font-size: .7em; vertical-align: -.25em; }
+
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    padding: 20px 20px 18px;
+  }
+  .stat .value {
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 500;
+    margin: 6px 0 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat .value small { font-family: var(--sans); font-size: 13px; color: var(--ink-3); margin-left: 3px; }
+  .stat .who { color: var(--ink-2); font-size: 12.5px; }
+
+  .rank-head { padding: 22px 20px 12px; }
+  .rank-head h2 { font-family: var(--serif); font-weight: 500; font-size: 20px; margin: 0 0 4px; }
+  .rank-head p { margin: 0; color: var(--ink-3); font-size: 13px; }
+
+  .table-scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; min-width: 600px; }
+  th {
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    text-align: right;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+  th:first-child, th:nth-child(2) { text-align: left; }
+  td {
+    padding: 12px 12px;
+    border-bottom: 1px solid var(--rule-2);
+    text-align: right;
+    color: var(--ink-2);
+  }
+  tr:last-child td { border-bottom: 0; }
+  td.rank { text-align: left; color: var(--ink-3); width: 28px; }
+  td.method { text-align: left; color: var(--ink); }
+  .method .name { font-weight: 500; display: flex; align-items: center; gap: 8px; }
+  .method .detail { color: var(--ink-3); font-size: 12px; margin-top: 2px; padding-left: 16px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex: none; }
+  tr.baseline .dot { background: var(--baseline); }
+  tr.top td { background: var(--accent-soft); }
+  tr.top td:first-child { border-radius: 8px 0 0 8px; }
+  tr.top td:last-child { border-radius: 0 8px 8px 0; }
+
+  .f05 { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+  .track { width: 72px; height: 6px; border-radius: 3px; background: var(--bar-track); overflow: hidden; flex: none; }
+  .fill { height: 100%; background: var(--bar); border-radius: 3px; }
+  tr.baseline .fill { background: var(--baseline); }
+  .f05 b { color: var(--ink); font-weight: 600; min-width: 2.6em; }
+
+  .foot { color: var(--ink-3); font-size: 12.5px; max-width: 70ch; margin: 0; padding-inline: 4px; }
+
+  @media (max-width: 560px) {
+    .stats { grid-template-columns: 1fr; gap: 14px; }
+  }
+</style>
+
+<main class="wrap">
+  <header>
+    <div class="eyebrow">VCBench · private test set</div>
+    <h1>Jev on founder-success prediction</h1>
+    <p class="lede">TypeSafe's Jev model predicting whether a founder succeeds from their anonymised profile alone. 4,500 held-out founders, 9% of them successful.</p>
+  </header>
+
+  <section class="card stats" aria-label="Headline scores">
+    <div class="stat">
+      <div class="label">Best F<sub>0.5</sub></div>
+      <div class="value">36.7<small>%</small></div>
+      <div class="who">Jev + 201 policies</div>
+    </div>
+    <div class="stat">
+      <div class="label">Best precision</div>
+      <div class="value">42.4<small>%</small></div>
+      <div class="who">Jev + 201 policies</div>
+    </div>
+    <div class="stat">
+      <div class="label">Best AUC</div>
+      <div class="value">74.2<small>%</small></div>
+      <div class="who">Jev + 201 policies</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="rank-head">
+      <h2>Rankings</h2>
+      <p>Sorted by F<sub>0.5</sub>. All thresholds and weights fitted on the public set only.</p>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Method</th>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th>AUC</th>
+            <th>F<sub>0.5</sub> ↓</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="top">
+            <td class="rank">1</td>
+            <td class="method">
+              <div class="name"><span class="dot"></span>Jev + 201 policies</div>
+              <div class="detail">L1 logistic regression · 36 of 201 policies kept · threshold 0.779</div>
+            </td>
+            <td>42.4</td>
+            <td>24.0</td>
+            <td>74.2</td>
+            <td><div class="f05"><div class="track"><div class="fill" style="width:91.8%"></div></div><b>36.7</b></div></td>
+          </tr>
+          <tr>
+            <td class="rank">2</td>
+            <td class="method">
+              <div class="name"><span class="dot"></span>Jev + 30 policies</div>
+              <div class="detail">L1 logistic regression · 13 of 30 policies kept · threshold 0.737</div>
+            </td>
+            <td>34.8</td>
+            <td>26.9</td>
+            <td>71.5</td>
+            <td><div class="f05"><div class="track"><div class="fill" style="width:82.2%"></div></div><b>32.9</b></div></td>
+          </tr>
+          <tr>
+            <td class="rank">3</td>
+            <td class="method">
+              <div class="name"><span class="dot"></span>Jev vanilla, fitted threshold</div>
+              <div class="detail">Single yes/no question · threshold 0.59</div>
+            </td>
+            <td>28.3</td>
+            <td>10.1</td>
+            <td>65.1</td>
+            <td><div class="f05"><div class="track"><div class="fill" style="width:52.0%"></div></div><b>20.8</b></div></td>
+          </tr>
+          <tr>
+            <td class="rank">4</td>
+            <td class="method">
+              <div class="name"><span class="dot"></span>Jev vanilla</div>
+              <div class="detail">Single yes/no question · threshold 0.50</div>
+            </td>
+            <td>14.1</td>
+            <td>52.1</td>
+            <td>65.1</td>
+            <td><div class="f05"><div class="track"><div class="fill" style="width:41.3%"></div></div><b>16.5</b></div></td>
+          </tr>
+          <tr class="baseline">
+            <td class="rank">5</td>
+            <td class="method">
+              <div class="name"><span class="dot"></span>Random classifier</div>
+              <div class="detail">Reference · predicts success at the 9% base rate</div>
+            </td>
+            <td>9.0</td>
+            <td>9.0</td>
+            <td>50.0</td>
+            <td><div class="f05"><div class="track"><div class="fill" style="width:22.5%"></div></div><b>9.0</b></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <p class="foot">Scores are percentages on vcbench_final_private (n = 4,500). F<sub>0.5</sub> weights precision twice as heavily as recall. Model: jev-1.13.0.</p>
+</main>
