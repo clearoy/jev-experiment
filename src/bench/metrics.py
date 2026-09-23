@@ -30,14 +30,14 @@ def compute_metrics(y_true: list[int], y_prob: list[float], threshold: float) ->
 
 def scan_best_threshold_f05(y_true: list[int], y_prob: list[float]) -> tuple[float, list[dict]]:
     """Scan candidate thresholds (every distinct probability) and return the one maximizing F0.5."""
-    from sklearn.metrics import fbeta_score
+    import numpy as np
+    from sklearn.metrics import precision_recall_curve
 
-    candidates = sorted(set(y_prob) | {0.0})
-    table = []
-    for t in candidates:
-        y_pred = [1 if p >= t else 0 for p in y_prob]
-        f05 = fbeta_score(y_true, y_pred, beta=0.5, zero_division=0)
-        table.append({"threshold": t, "f0.5": f05})
+    precision, recall, thresholds = precision_recall_curve(y_true, y_prob)
+    precision, recall = precision[:-1], recall[:-1]
+    denom = 0.25 * precision + recall
+    f05 = np.divide(1.25 * precision * recall, denom, out=np.zeros_like(denom), where=denom > 0)
 
-    best = max(table, key=lambda r: r["f0.5"])
-    return best["threshold"], table
+    table = [{"threshold": float(t), "f0.5": float(f)} for t, f in zip(thresholds, f05)]
+    best = int(np.argmax(f05))
+    return float(thresholds[best]), table
