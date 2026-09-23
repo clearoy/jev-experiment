@@ -5,15 +5,10 @@ from pathlib import Path
 
 from jev import Noul
 
+from ._prompts import POLICY_INSTRUCTIONS_TEMPLATE
 from .data import DATA_DIR
 
 POLICIES_FILE = DATA_DIR / "policies" / "policies.csv"
-
-POLICY_INSTRUCTIONS_TEMPLATE = (
-    "Investor heuristic (guidance, not a strict rule): {policy}\n"
-    "Considering this heuristic along with the founder's full profile, "
-    "will this founder be successful?"
-)
 
 
 def load_policies(path: Path = POLICIES_FILE, limit: int | None = None) -> list[dict]:

@@ -22,7 +22,7 @@ sys.path.insert(0, str(ROOT / "src"))
 load_dotenv(ROOT / ".env")
 
 from bench import (  # noqa: E402
-    INSTRUCTIONS,
+    VANILLA_INSTRUCTIONS,
     PRIVATE_DATA_FILE,
     RESULT_DIR,
     compute_metrics,
@@ -55,7 +55,7 @@ def main() -> None:
     write_details_csv(details_path, results, args.threshold)
 
     metrics_out = {
-        "instructions": INSTRUCTIONS,
+        "instructions": VANILLA_INSTRUCTIONS,
         "dataset": PRIVATE_DATA_FILE.name,
         "timestamp": timestamp,
         **metrics,

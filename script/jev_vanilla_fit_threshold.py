@@ -29,7 +29,7 @@ sys.path.insert(0, str(ROOT / "src"))
 load_dotenv(ROOT / ".env")
 
 from bench import (  # noqa: E402
-    INSTRUCTIONS,
+    VANILLA_INSTRUCTIONS,
     PUBLIC_DATA_FILE,
     RESULT_DIR,
     compute_metrics,
@@ -73,7 +73,7 @@ def main() -> None:
 
     public_metrics_at_best = compute_metrics(public_y_true, public_y_prob, best_threshold)
     summary = {
-        "instructions": INSTRUCTIONS,
+        "instructions": VANILLA_INSTRUCTIONS,
         "dataset": PUBLIC_DATA_FILE.name,
         "timestamp": timestamp,
         "best_threshold": best_threshold,
@@ -94,7 +94,7 @@ def main() -> None:
     private_y_true, private_y_prob = read_details_csv(private_details_path)
     private_metrics_at_best = compute_metrics(private_y_true, private_y_prob, best_threshold)
     eval_out = {
-        "instructions": INSTRUCTIONS,
+        "instructions": VANILLA_INSTRUCTIONS,
         "dataset": "vcbench_final_private.csv",
         "reused_details_file": private_details_path.name,
         "fitted_threshold_source": "vcbench_final_public.csv",

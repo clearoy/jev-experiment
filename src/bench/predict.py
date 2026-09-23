@@ -6,19 +6,15 @@ from pathlib import Path
 
 from jev import AsyncJevClient
 
+from ._prompts import VANILLA_INSTRUCTIONS
 from .policies import policy_question
 from .results import JUDGEMENT_FIELDS, read_judgements
-
-INSTRUCTIONS = (
-    "Will this startup founder be successful, based on their educational "
-    "background, professional experience, and industry?"
-)
 
 
 async def run_predictions(
     rows: list[dict],
     concurrency: int = 20,
-    instructions: str = INSTRUCTIONS,
+    instructions: str = VANILLA_INSTRUCTIONS,
 ) -> list[dict]:
     """Call noul(anonymised_prose) for every row, concurrently.
 

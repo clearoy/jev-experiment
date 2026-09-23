@@ -1,10 +1,11 @@
 """vcbench founder-success benchmark: run jev predictions and score them."""
 
+from ._prompts import POLICY_INSTRUCTIONS_TEMPLATE, VANILLA_INSTRUCTIONS
 from .data import PRIVATE_DATA_FILE, PUBLIC_DATA_FILE, load_rows
 from .metrics import compute_metrics, scan_best_threshold_f05
-from .policies import POLICIES_FILE, POLICY_INSTRUCTIONS_TEMPLATE, load_policies, policy_question
+from .policies import POLICIES_FILE, load_policies, policy_question
 from .policy_model import fit_l1_logistic, predict_from_selected, selected_positions
-from .predict import INSTRUCTIONS, run_policy_predictions, run_predictions
+from .predict import run_policy_predictions, run_predictions
 from .results import (
     RESULT_DIR,
     build_policy_matrix,
@@ -18,7 +19,7 @@ __all__ = [
     "PUBLIC_DATA_FILE",
     "PRIVATE_DATA_FILE",
     "load_rows",
-    "INSTRUCTIONS",
+    "VANILLA_INSTRUCTIONS",
     "run_predictions",
     "run_policy_predictions",
     "POLICIES_FILE",
